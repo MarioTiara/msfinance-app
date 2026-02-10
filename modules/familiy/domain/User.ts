@@ -1,8 +1,8 @@
 import { FamilyId } from "@/modules/familiy/domain/value-objects/FamilyId";
-import { UserId } from "./value-objects/UserId";
-import { UserName } from "./value-objects/UserName";
-import { Email } from "./value-objects/Email";
-import { Password } from "./value-objects/Password";
+import { UserId } from "../../familiy/domain/value-objects/UserId";
+import { UserName } from "../../familiy/domain/value-objects/UserName";
+import { Email } from "../../familiy/domain/value-objects/Email";
+import { Password } from "../../familiy/domain/value-objects/Password";
 
 export class User {
     constructor(

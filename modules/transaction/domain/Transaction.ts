@@ -1,6 +1,6 @@
 import { Entity } from "@/modules/shared/domain/Entity";
 import { Money } from "@/modules/shared/domain/value-objects/Money";
-import { UserId } from "@/modules/user/domain/value-objects/UserId";
+import { UserId } from "@/modules/familiy/domain/value-objects/UserId";
 
 export interface TransactionProps {
     id: number
