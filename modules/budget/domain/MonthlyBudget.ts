@@ -11,7 +11,6 @@ interface MonthlyBudgetProps {
     updatedAt?: Date
 }
 
-
 export class MonthlyBudget extends Entity<number> {
     private props: MonthlyBudgetProps;
 
@@ -47,7 +46,7 @@ export class MonthlyBudget extends Entity<number> {
         this.props.amount = newAmount
         this.props.updatedAt = new Date()
     }
-    
+
     // ===== Validation =====
     private validate(props: MonthlyBudgetProps) {
         if (!props.categoryId) {
