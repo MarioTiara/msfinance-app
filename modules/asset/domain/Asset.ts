@@ -6,7 +6,7 @@ export interface AssetProps {
     accountId?: number | null;
 
     name: string;
-    assetType: AssetType;
+    assetType: AssetType; 
     estimatedValue: number;
     quantity: number;
     unit: string;
