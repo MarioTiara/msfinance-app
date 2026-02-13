@@ -1,0 +1,186 @@
+Table categories {
+  id int [pk, increment]
+  name varchar(100) [not null]
+  type enum('income', 'expense', 'debt') [not null]
+  parent_id int [ref: > categories.id, default: null]
+}
+
+Table expense_budget {
+  id int [pk, increment]          // primary key
+  category_id int [ref: > categories.id, not null]  // link ke kategori
+  budget_month date [not null]    // bulan untuk budget, simpan sebagai first day of month
+  amount decimal(12,2) [not null] // jumlah budget
+  created_at timestamp [default: `current_timestamp`] // otomatis
+  updated_at timestamp [default: `current_timestamp`] // otomatis update saat edit
+}
+
+Table transaction {
+  id int [pk, increment]  
+  user_id int [ref: > users.id, not null] 
+  type varchar (10) // INCOME | EXPENSE | TRANSFER | INVEST | SAVING     
+  category_id int [ref : > categories.id, not null]             
+  budget_id int [ref :> expense_budget.id, null]
+  transaction_date date [not null]          // tanggal transaksi
+  amount decimal(12,2) [not null]          // jumlah uang
+  description text                          // catatan / keterangan
+  created_at timestamp [default: `current_timestamp`] 
+  updated_at timestamp [default: `current_timestamp`]
+}
+
+Table investments_transaction {
+  id int [pk, increment]                     // primary key
+  user_id int [ref: > users.id, not null]    // user / anggota keluarga
+  goals_id int [ref: > financial_goals.id, null]
+  category_id int [ref: > categories.id, not null]  // tipe investasi
+  name varchar(100) [not null]               // nama investasi / simbol
+  transaction_type enum('buy','sell','dividend') [not null] // jenis transaksi
+  instrument_code varchar [ref:> market_price.instrument_code, not null]
+  quantity decimal(12,2)                     // jumlah unit (saham / reksadana / gram emas)
+  price_per_unit decimal(12,2)               // harga per unit
+  transaction_date date [not null]           // tanggal transaksi
+  description text                           // optional catatan
+  created_at timestamp [default: `current_timestamp`] 
+  updated_at timestamp [default: `current_timestamp`]
+}
+
+Table users {
+  id int [pk, increment]
+  family_id int [ref: > families.id, not null]
+  name varchar(100) [not null]
+  email varchar(150) [unique, not null]
+  password varchar(255) [not null]
+  created_at timestamp [default: `current_timestamp`]
+  updated_at timestamp [default: `current_timestamp`]
+}
+
+Table families {
+  id int [pk, increment]
+  name varchar(100) [not null] // contoh: "Keluarga Mario"
+  created_at timestamp [default: `current_timestamp`]
+}
+
+Table accounts {
+  id int [pk, increment]         // unique id untuk account
+  user_id int [ref: > users.id]  // pemilik account
+  name varchar(100) [not null]   // nama account
+  type enum('saving','cash','deposito') [default: 'bank']
+  currency char(3) [default: 'IDR']
+  account_number varchar (50) [null]
+  description text
+  created_at timestamp [default: `current_timestamp`]
+  updated_at timestamp [default: `current_timestamp`]
+}
+
+//Menyimpan Asset Fisik
+Table assets {
+  id int [pk, increment]
+  user_holder_id int [ref: > users.id]
+  name varchar(100) [not null]                 // nama asset
+  asset_type enum('property','vehicle','electronics','other') [not null]
+  quantity decimal(12,2) [default: 1]         // jumlah unit
+  unit varchar(20) [not null]                  // satuan: 'kg', 'gram', unit, mm^2 etc
+  
+  value_direction varchar (10) // APPRECIATE, DEPRECIATE, STABLE
+  anual_arte decial (12,2)
+  
+  estimate_value decial 
+  description text
+  acquired_date date
+  created_at timestamp [default: `current_timestamp`]
+  updated_at timestamp [default: `current_timestamp`]
+}
+
+// ============================
+// Financial Goals (Aggregate Root)
+// ============================
+Table financial_goals {
+  id int [pk, increment]
+  family_id int [not null, ref: > families.id]
+
+  name varchar(100) [not null]
+  target_amount decimal(14,2) [not null]
+  status enum('not_started', 'in_progress', 'accomplished') [default: 'not_started']
+  description text
+  amount_per_period decimal(14,2) [not null] // contoh: 300000
+  frequency enum('monthly', 'weekly') [not null]
+  start_date date [not null]
+  end_date date
+  created_at timestamp [default: `current_timestamp`]
+  updated_at timestamp [default: `current_timestamp`]
+}
+
+//
+
+Table market_price {
+  id int [pk, increment]
+  instrument_code varchar(20) [not null] //BBCA, GOLD, BBRI
+  price decimal(20,2) [not null]
+  price_date date [not null]
+  source varchar(100) [null]
+}
+
+Table loan_transaction {
+  id int [pk, increment]
+  user_id int [ref:> users.id, not null]
+  name varchar (100) [not null]
+  principal_amount decimal (20, 2) [not null]
+  start_date date [not null]
+  end_date  date [not null]
+  status varchar (50) // ACTIVE / PAID_OFF
+  type varhcar (50) //FIXED, FLOATING
+}
+
+Table loan_payment {
+  id int [pk, increment]
+  loan_id int [ref:> loan_transaction.id, not null]
+  due_date date [not null]
+  amount_principal decimal (20,2) [not null]
+  amount_interest decimal (20,2) [not null]
+  total_amount decimal (20,2) [not null]
+  status varchar //PENDING, PAID, LATE
+  paid_date date [null]
+}
+
+Table credit_card{
+  id int [pk, increment]
+  user_id int [ref : > users.id, not null]
+  card_name varchar (50) [not null]
+  limit decial (20,2) [not null]
+  billing_cycle_start int [ not null]
+  billing_cycle_end  int [not null]
+}
+
+Table credit_card_transaction {
+ id int [pk, increment]
+ card_id int [ref: > credit_card.id, not null]
+ name varchar (100) [not  null]
+ transaction_date date [not null]
+ description varchar (100) [null]
+
+ payment_scheme varchar (50) [not null] //FULL, INSTALLMENT
+ installment_tenor int [null]
+ interest_rate decimal (20,2) [null]
+ admin_fee decimal (20,2) [null]
+
+ created_at date [not null]
+}
+
+Table credit_card_installment{
+  id int [pk, increment]
+  transaction_id int [ref : > credit_card_transaction.id, not null]
+  installment_no int [not null] //1..12
+  due_mont varchar (10) [not null] //01-2026
+  principal_amount decimal (20,2) [null]
+  admin_fee decimal (20,2) [null]
+  status varchar (50) //PAID / PENDING
+}
+
+
+
+
+
+
+
+
+
+
