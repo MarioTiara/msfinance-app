@@ -1,7 +1,8 @@
+import { Entity } from "@/modules/shared/domain/Entity";
 import { AssetType } from "./AssetType";
+import { ValuationPolicy } from "./value-objects/ValuationPolicy";
 
 export interface AssetProps {
-    id?: number;
     familyId: number;
 
     name: string;
@@ -9,18 +10,19 @@ export interface AssetProps {
     quantity: number;
     unit: string;
 
+    valuuationPolicy?: ValuationPolicy
+
     estimatedValue: number;
     description?: string;
     acquiredDate?: Date;
-
-    createdAt: Date;
-    updatedAt: Date;
+    createdByUserId: number;
 }
 
-export class Asset {
+export class Asset extends Entity<number> {
     private props: AssetProps;
 
-    private constructor(props: AssetProps) {
+    private constructor(props: AssetProps, id?: number) {
+        super(id);
         this.validate(props);
         this.props = props;
     }
@@ -46,14 +48,10 @@ export class Asset {
        FACTORY
     ====================== */
 
-    static create(props: Omit<AssetProps,"id"| "createdAt" | "updatedAt">): Asset {
-        const now = new Date();
-
+    static create(props: AssetProps): Asset {
         return new Asset({
             ...props,
             quantity: props.quantity ?? 1,
-            createdAt: now,
-            updatedAt: now,
         });
     }
 
@@ -85,18 +83,9 @@ export class Asset {
         this.touch();
     }
 
-    private touch() {
-        this.props.updatedAt = new Date();
-    }
-
     /* =====================
        GETTERS
     ====================== */
-
-    get id() {
-        return this.props.id;
-    }
-
     get familyId() {
         return this.props.familyId;
     }
