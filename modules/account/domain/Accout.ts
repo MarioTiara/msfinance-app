@@ -19,17 +19,13 @@ export interface AccountProps {
 export class Account extends Entity<number> {
     private props: AccountProps
 
-    constructor(props: AccountProps) {
+    private constructor(props: AccountProps) {
         super(props.id)
+
         this.validate(props)
-        this.props = {
-            ...props,
-            type: props.type ?? AccountType.BANK,
-            currency: props.currency ?? Currency.IDR,
-            createdAt: props.createdAt ?? new Date(),
-            updatedAt: props.updatedAt ?? new Date(),
-        }
+        this.props =props;
     }
+
 
     private validate(props: AccountProps) {
         if (!props.userId) {
@@ -43,6 +39,15 @@ export class Account extends Entity<number> {
         if (props.name.length > 100) {
             throw new Error('Account name max 100 characters')
         }
+    }
+
+    static create(props: Omit<AccountProps,"id"| "createdAt" | "updatedAt">): Account{
+        const now= new Date()
+        return new Account({
+            ...props,
+            createdAt:now,
+            updatedAt:now
+        })
     }
 
     // Getters

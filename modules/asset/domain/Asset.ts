@@ -1,7 +1,7 @@
 import { AssetType } from "./AssetType";
 
 export interface AssetProps {
-    id: number;
+    id?: number;
     familyId: number;
 
     name: string;
@@ -46,9 +46,7 @@ export class Asset {
        FACTORY
     ====================== */
 
-    static create(props: Omit<AssetProps, "createdAt" | "updatedAt" | "quantity"> & {
-        quantity?: number;
-    }): Asset {
+    static create(props: Omit<AssetProps,"id"| "createdAt" | "updatedAt">): Asset {
         const now = new Date();
 
         return new Asset({
