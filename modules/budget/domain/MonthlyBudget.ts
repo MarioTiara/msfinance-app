@@ -1,10 +1,11 @@
 import { Money } from "@/modules/shared/domain/value-objects/Money"
 import { BudgetMonth } from "./value-object/BudgetMonth"
 import { Entity } from "@/modules/shared/domain/Entity"
+import { Category } from "@/modules/category/domain/Category"
 
 interface MonthlyBudgetProps {
     id: number
-    categoryId: number
+    category: Category
     budgetMonth: BudgetMonth
     amount: Money
     createdAt?: Date
@@ -21,8 +22,8 @@ export class MonthlyBudget extends Entity<number> {
     }
 
     // ====== Getters ======
-    get categoryId(): number {
-        return this.props.categoryId
+    get categoryId(): string {
+        return this.props.category.name
     }
 
     get budgetMonth(): BudgetMonth {
@@ -49,7 +50,7 @@ export class MonthlyBudget extends Entity<number> {
 
     // ===== Validation =====
     private validate(props: MonthlyBudgetProps) {
-        if (!props.categoryId) {
+        if (!props.category || !props.category.id) {
             throw new Error('Category is required')
         }
     }

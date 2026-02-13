@@ -3,14 +3,13 @@ import { AssetType } from "./AssetType";
 export interface AssetProps {
     id: number;
     familyId: number;
-    accountId?: number | null;
 
     name: string;
     assetType: AssetType; 
-    estimatedValue: number;
     quantity: number;
     unit: string;
 
+    estimatedValue: number;
     description?: string;
     acquiredDate?: Date;
 
@@ -54,7 +53,6 @@ export class Asset {
 
         return new Asset({
             ...props,
-            accountId: props.accountId ?? null,
             quantity: props.quantity ?? 1,
             createdAt: now,
             updatedAt: now,
@@ -103,10 +101,6 @@ export class Asset {
 
     get familyId() {
         return this.props.familyId;
-    }
-
-    get accountId() {
-        return this.props.accountId;
     }
 
     get totalValue() {

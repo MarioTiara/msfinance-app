@@ -2,7 +2,7 @@ import { Entity } from "@/modules/shared/domain/Entity";
 import { Money } from "@/modules/shared/domain/value-objects/Money";
 import { UserId } from "@/modules/familiy/domain/value-objects/UserId";
 
-export interface TransactionProps {
+export interface CashTransactionProps {
     id: number
     userId: UserId
     categoryId: number
@@ -14,9 +14,9 @@ export interface TransactionProps {
     updatedAt?: Date
 }
 
-export class Transaction extends Entity<number> {
-    private props: TransactionProps
-    constructor(props: TransactionProps) {
+export class CashTransaction extends Entity<number> {
+    private props: CashTransactionProps
+    constructor(props: CashTransactionProps) {
         super(props.id)
         this.validate(props)
         this.props = {
@@ -75,7 +75,7 @@ export class Transaction extends Entity<number> {
     }
 
     // ===== Validation =====
-    private validate(props: TransactionProps) {
+    private validate(props: CashTransactionProps) {
         if (!props.userId) throw new Error('User is required')
         if (!props.categoryId) throw new Error('Category is required')
         if (!props.amount) throw new Error('Amount is required')
