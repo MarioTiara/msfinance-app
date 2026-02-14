@@ -15,6 +15,18 @@ export class Category extends Entity<number> {
         this.props = props;
     }
 
+
+    /**
+     * Factory method to create a new Category instance.
+     * This method encapsulates the creation logic, providing a clear and consistent way to instantiate a Category object.
+     * @param props - The properties for the new category, conforming to the CategoryProps interface.
+     * @returns A new instance of the Category class.
+     */
+    static create(props: CategoryProps):Category{
+        return new Category(props);
+    }
+
+    
     // ===== Getters =====
     get name(): string {
         return this.props.name;
@@ -31,10 +43,6 @@ export class Category extends Entity<number> {
     // ===== Business Logic =====
     public isRoot(): boolean {
         return !this.props.parentId;
-    }
-
-    static create(props: CategoryProps):Category{
-        return new Category(props);
     }
 
     public rename(newName: string) {
