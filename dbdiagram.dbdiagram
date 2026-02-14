@@ -11,10 +11,10 @@
       "y": 50
     },
     {
-      "name": "expense_budget",
+      "name": "budget",
       "schemaName": "public",
-      "x": -48.71207122496564,
-      "y": 251.34204303015062
+      "x": -20.918653821314336,
+      "y": 2456.2156262109256
     },
     {
       "name": "expense_budget_allocation",
@@ -111,7 +111,7 @@
       "secondFieldNames": [
         "family_id"
       ],
-      "secondTableName": "expense_budget",
+      "secondTableName": "budget",
       "secondSchemaName": "public",
       "secondRelation": "*",
       "checkPoints": []
@@ -126,7 +126,7 @@
       "secondFieldNames": [
         "category_id"
       ],
-      "secondTableName": "expense_budget",
+      "secondTableName": "budget",
       "secondSchemaName": "public",
       "secondRelation": "*",
       "checkPoints": []
@@ -135,7 +135,7 @@
       "firstFieldNames": [
         "id"
       ],
-      "firstTableName": "expense_budget",
+      "firstTableName": "budget",
       "firstSchemaName": "public",
       "firstRelation": "1",
       "secondFieldNames": [
@@ -157,6 +157,21 @@
         "category_id"
       ],
       "secondTableName": "expense_budget_allocation",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "expense_budget_allocation",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "allocation_id"
+      ],
+      "secondTableName": "cash_transaction",
       "secondSchemaName": "public",
       "secondRelation": "*",
       "checkPoints": []
@@ -169,22 +184,7 @@
       "firstSchemaName": "public",
       "firstRelation": "1",
       "secondFieldNames": [
-        "user_id"
-      ],
-      "secondTableName": "cash_transaction",
-      "secondSchemaName": "public",
-      "secondRelation": "*",
-      "checkPoints": []
-    },
-    {
-      "firstFieldNames": [
-        "id"
-      ],
-      "firstTableName": "expense_budget",
-      "firstSchemaName": "public",
-      "firstRelation": "1",
-      "secondFieldNames": [
-        "budget_id"
+        "user_creator_id"
       ],
       "secondTableName": "cash_transaction",
       "secondSchemaName": "public",

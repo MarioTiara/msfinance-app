@@ -15,7 +15,7 @@ Table categories {
 // ============================
 // Expense Budget (Aggregate Root)
 // ============================
-Table expense_budget {
+Table budget {
   id int [pk, increment] // primary key
   family_id int [ref: > families.id, not null] // untuk budget keluarga
   category_id int [ref: > categories.id, not null] // link ke kategori
@@ -28,7 +28,7 @@ Table expense_budget {
 
 Table expense_budget_allocation {
   id int [pk, increment]
-  budget_id int [ref: > expense_budget.id, not null] // link ke budget
+  budget_id int [ref: > budget.id, not null] // link ke budget
   category_id int [ref: > categories.id, not null] // link ke kategori
   allocated_amount decimal(12,2) [not null] // jumlah alokasi untuk kategori ini
 
@@ -42,14 +42,15 @@ Table expense_budget_allocation {
 // ============================
 Table cash_transaction {
   id int [pk, increment]
-  user_id int [ref: > users.id, not null]
   type varchar (10) // INCOME | EXPENSE | TRANSFER | SAVING
-  budget_id int [ref :> expense_budget.id, null]
+  allocation_id int [ref :> expense_budget_allocation.id, null]
+  
   transaction_date date [not null] // tanggal transaksi
   amount decimal(12,2) [not null] // jumlah uang
   currency char(3) [default: 'IDR']
   description text // catatan / keterangan
 
+  user_creator_id int [ref: > users.id, not null]
   created_at timestamp [default: `current_timestamp`]
   updated_at timestamp [default: `current_timestamp`]
 }
