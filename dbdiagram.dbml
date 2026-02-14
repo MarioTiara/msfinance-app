@@ -7,6 +7,9 @@ Table categories {
   name varchar(100) [not null]
   type enum('income', 'expense', 'debt') [not null]
   parent_id int [ref: > categories.id, default: null]
+
+  created_at timestamp [default: `current_timestamp`] // otomatis
+  updated_at timestamp [default: `current_timestamp`] // otomatis update saat edit
 }
 
 // ============================
@@ -14,7 +17,7 @@ Table categories {
 // ============================
 Table expense_budget {
   id int [pk, increment] // primary key
-  family_id int [ref: > families.id, not null] // untuk budget keluarga 
+  family_id int [ref: > families.id, not null] // untuk budget keluarga
   category_id int [ref: > categories.id, not null] // link ke kategori
   budget_month date [not null] // bulan untuk budget, simpan sebagai first day of month
   total_amount decimal(12,2) [not null] // jumlah budget
@@ -46,9 +49,11 @@ Table cash_transaction {
   amount decimal(12,2) [not null] // jumlah uang
   currency char(3) [default: 'IDR']
   description text // catatan / keterangan
+
   created_at timestamp [default: `current_timestamp`]
   updated_at timestamp [default: `current_timestamp`]
 }
+
 // ============================
 // Investments (Aggregate Root)
 // ============================
@@ -64,6 +69,7 @@ Table investments {
   price_per_unit decimal(12,2) // harga per unit
   transaction_date date [not null] // tanggal transaksi
   description text // optional catatan
+
   created_at timestamp [default: `current_timestamp`]
   updated_at timestamp [default: `current_timestamp`]
 }
@@ -78,6 +84,7 @@ Table users {
   name varchar(100) [not null]
   email varchar(150) [unique, not null]
   password varchar(255) [not null]
+
   created_at timestamp [default: `current_timestamp`]
   updated_at timestamp [default: `current_timestamp`]
 }
@@ -89,7 +96,9 @@ Table users {
 Table families {
   id int [pk, increment]
   name varchar(100) [not null] // contoh: "Keluarga Mario"
+
   created_at timestamp [default: `current_timestamp`]
+  updated_at timestamp [default: `current_timestamp`]
 }
 
 
@@ -99,7 +108,7 @@ Table families {
 
 Table accounts {
   id int [pk, increment] // unique id untuk account
-  user_id int [ref: > users.id] // pemilik account
+  user_holder_id int [ref: > users.id] // pemilik account
 
   name varchar(100) [not null] // nama account
   type enum('cash','saving','investment','credit_card') [not null]
@@ -135,6 +144,7 @@ Table assets {
   estimate_value decial
   description text
   acquired_date date
+
   created_at timestamp [default: `current_timestamp`]
   updated_at timestamp [default: `current_timestamp`]
 }
@@ -154,6 +164,7 @@ Table financial_goals {
   frequency enum('monthly', 'weekly') [not null]
   start_date date [not null]
   end_date date
+
   created_at timestamp [default: `current_timestamp`]
   updated_at timestamp [default: `current_timestamp`]
 }
@@ -166,8 +177,10 @@ Table instrument {
   id int [pk, increment]
   code varchar(20) [not null, unique] //BBCA, GOLD, BBRI
   current_price decimal(20,2) [not null]
-  price_date date [not null]
   source varchar(100) [null]
+
+  created_at timestamp [default: `current_timestamp`]
+  updated_at timestamp [default: `current_timestamp`]
 }
 
 
@@ -193,13 +206,14 @@ Table loan {
   end_date date [not null]
   status varchar (50) // ACTIVE / PAID_OFF
 
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamp [default: `current_timestamp`]
+  updated_at timestamp [default: `current_timestamp`]
 }
 
 Table loan_insatllment {
   id int [pk]
   loan_id int [ref: > loan.id]
+
   installment_no int
   due_month varchar(10)
   principal_amount decimal(20,2)
@@ -210,8 +224,8 @@ Table loan_insatllment {
   paid_transaction_id int [ref: > cash_transaction.id, null]
   paid_date date [null]
 
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamp [default: `current_timestamp`]
+  updated_at timestamp [default: `current_timestamp`]
 }
 
 

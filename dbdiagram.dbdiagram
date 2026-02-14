@@ -274,7 +274,7 @@
       "firstSchemaName": "public",
       "firstRelation": "1",
       "secondFieldNames": [
-        "user_id"
+        "user_holder_id"
       ],
       "secondTableName": "accounts",
       "secondSchemaName": "public",
