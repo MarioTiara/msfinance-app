@@ -1,3 +1,7 @@
+
+// ============================
+// Categories (Aggregate Root)
+// ============================
 Table categories {
   id int [pk, increment]
   name varchar(100) [not null]
@@ -5,43 +9,68 @@ Table categories {
   parent_id int [ref: > categories.id, default: null]
 }
 
+// ============================
+// Expense Budget (Aggregate Root)
+// ============================
 Table expense_budget {
-  id int [pk, increment]          // primary key
-  category_id int [ref: > categories.id, not null]  // link ke kategori
-  budget_month date [not null]    // bulan untuk budget, simpan sebagai first day of month
-  amount decimal(12,2) [not null] // jumlah budget
+  id int [pk, increment] // primary key
+  family_id int [ref: > families.id, not null] // untuk budget keluarga 
+  category_id int [ref: > categories.id, not null] // link ke kategori
+  budget_month date [not null] // bulan untuk budget, simpan sebagai first day of month
+  total_amount decimal(12,2) [not null] // jumlah budget
+
   created_at timestamp [default: `current_timestamp`] // otomatis
   updated_at timestamp [default: `current_timestamp`] // otomatis update saat edit
 }
 
-Table transaction {
-  id int [pk, increment]  
-  user_id int [ref: > users.id, not null] 
-  type varchar (10) // INCOME | EXPENSE | TRANSFER | INVEST | SAVING     
-  category_id int [ref : > categories.id, not null]             
+Table expense_budget_allocation {
+  id int [pk, increment]
+  budget_id int [ref: > expense_budget.id, not null] // link ke budget
+  category_id int [ref: > categories.id, not null] // link ke kategori
+  allocated_amount decimal(12,2) [not null] // jumlah alokasi untuk kategori ini
+
+  created_at timestamp [default: `current_timestamp`] // otomatis
+  updated_at timestamp [default: `current_timestamp`] // otomatis update saat edit
+}
+
+
+// ============================
+// Cash Transaction (Aggregate Root)
+// ============================
+Table cash_transaction {
+  id int [pk, increment]
+  user_id int [ref: > users.id, not null]
+  type varchar (10) // INCOME | EXPENSE | TRANSFER | SAVING
   budget_id int [ref :> expense_budget.id, null]
-  transaction_date date [not null]          // tanggal transaksi
-  amount decimal(12,2) [not null]          // jumlah uang
-  description text                          // catatan / keterangan
-  created_at timestamp [default: `current_timestamp`] 
+  transaction_date date [not null] // tanggal transaksi
+  amount decimal(12,2) [not null] // jumlah uang
+  currency char(3) [default: 'IDR']
+  description text // catatan / keterangan
+  created_at timestamp [default: `current_timestamp`]
+  updated_at timestamp [default: `current_timestamp`]
+}
+// ============================
+// Investments (Aggregate Root)
+// ============================
+Table investments {
+  id int [pk, increment] // primary key
+  user_id int [ref: > users.id, not null] // user / anggota keluarga
+  goals_id int [ref: > financial_goals.id, null]
+  category_id int [ref: > categories.id, not null] // tipe investasi
+  name varchar(100) [not null] // nama investasi / simbol
+  transaction_type enum('buy','sell','dividend') [not null] // jenis transaksi
+  instrument_code varchar [ref:> instrument.code, not null]
+  quantity decimal(12,2) // jumlah unit (saham / reksadana / gram emas)
+  price_per_unit decimal(12,2) // harga per unit
+  transaction_date date [not null] // tanggal transaksi
+  description text // optional catatan
+  created_at timestamp [default: `current_timestamp`]
   updated_at timestamp [default: `current_timestamp`]
 }
 
-Table investments_transaction {
-  id int [pk, increment]                     // primary key
-  user_id int [ref: > users.id, not null]    // user / anggota keluarga
-  goals_id int [ref: > financial_goals.id, null]
-  category_id int [ref: > categories.id, not null]  // tipe investasi
-  name varchar(100) [not null]               // nama investasi / simbol
-  transaction_type enum('buy','sell','dividend') [not null] // jenis transaksi
-  instrument_code varchar [ref:> market_price.instrument_code, not null]
-  quantity decimal(12,2)                     // jumlah unit (saham / reksadana / gram emas)
-  price_per_unit decimal(12,2)               // harga per unit
-  transaction_date date [not null]           // tanggal transaksi
-  description text                           // optional catatan
-  created_at timestamp [default: `current_timestamp`] 
-  updated_at timestamp [default: `current_timestamp`]
-}
+// ============================
+// Users (Aggregate Root)
+// ============================
 
 Table users {
   id int [pk, increment]
@@ -53,37 +82,57 @@ Table users {
   updated_at timestamp [default: `current_timestamp`]
 }
 
+
+// ============================
+// Families (Aggregate Root)
+// ============================
 Table families {
   id int [pk, increment]
   name varchar(100) [not null] // contoh: "Keluarga Mario"
   created_at timestamp [default: `current_timestamp`]
 }
 
+
+// ============================
+// Account (Aggregate Root)
+// ============================
+
 Table accounts {
-  id int [pk, increment]         // unique id untuk account
-  user_id int [ref: > users.id]  // pemilik account
-  name varchar(100) [not null]   // nama account
-  type enum('saving','cash','deposito') [default: 'bank']
+  id int [pk, increment] // unique id untuk account
+  user_id int [ref: > users.id] // pemilik account
+
+  name varchar(100) [not null] // nama account
+  type enum('cash','saving','investment','credit_card') [not null]
+
   currency char(3) [default: 'IDR']
   account_number varchar (50) [null]
   description text
+
+  credit_limit decimal(12,2) [null]
+  billing_cycle_start int [null]
+  billing_cycle_end int [null]
+
   created_at timestamp [default: `current_timestamp`]
   updated_at timestamp [default: `current_timestamp`]
 }
+
+// ============================
+// Assets (Aggregate Root)
+// ============================
 
 //Menyimpan Asset Fisik
 Table assets {
   id int [pk, increment]
   user_holder_id int [ref: > users.id]
-  name varchar(100) [not null]                 // nama asset
+  name varchar(100) [not null] // nama asset
   asset_type enum('property','vehicle','electronics','other') [not null]
-  quantity decimal(12,2) [default: 1]         // jumlah unit
-  unit varchar(20) [not null]                  // satuan: 'kg', 'gram', unit, mm^2 etc
-  
+  quantity decimal(12,2) [default: 1] // jumlah unit
+  unit varchar(20) [not null] // satuan: 'kg', 'gram', unit, mm^2 etc
+
   value_direction varchar (10) // APPRECIATE, DEPRECIATE, STABLE
   anual_arte decial (12,2)
-  
-  estimate_value decial 
+
+  estimate_value decial
   description text
   acquired_date date
   created_at timestamp [default: `current_timestamp`]
@@ -109,70 +158,60 @@ Table financial_goals {
   updated_at timestamp [default: `current_timestamp`]
 }
 
-//
+// ============================
+// Market Price (Aggregate Root)
+// ============================
 
-Table market_price {
+Table instrument {
   id int [pk, increment]
-  instrument_code varchar(20) [not null] //BBCA, GOLD, BBRI
-  price decimal(20,2) [not null]
+  code varchar(20) [not null, unique] //BBCA, GOLD, BBRI
+  current_price decimal(20,2) [not null]
   price_date date [not null]
   source varchar(100) [null]
 }
 
-Table loan_transaction {
+
+// ============================
+// LOAN (Aggregate Root)
+// ============================
+Table loan {
   id int [pk, increment]
-  user_id int [ref:> users.id, not null]
+  account_id int [ref:> accounts.id, not null]
+  user_holder_id int [ref:> users.id, not null]
+
   name varchar (100) [not null]
   principal_amount decimal (20, 2) [not null]
+  total_payable_amount decimal (20, 2) [not null]
+
+  type enum ('bank','credit_card')
+  payment_scheme enum ('FULL','INSTALLMENT')
+  interest_type enum ('FIXED','FLOATING')
+  interest_rate decimal (5,2) // contoh: 10.5 untuk 10
+  installment_tenor_months int // contoh: 12 untuk 1 tahun, 24 untuk 2 tahun, dll
+
   start_date date [not null]
-  end_date  date [not null]
+  end_date date [not null]
   status varchar (50) // ACTIVE / PAID_OFF
-  type varhcar (50) //FIXED, FLOATING
+
+  created_at timestamp
+  updated_at timestamp
 }
 
-Table loan_payment {
-  id int [pk, increment]
-  loan_id int [ref:> loan_transaction.id, not null]
-  due_date date [not null]
-  amount_principal decimal (20,2) [not null]
-  amount_interest decimal (20,2) [not null]
-  total_amount decimal (20,2) [not null]
-  status varchar //PENDING, PAID, LATE
+Table loan_insatllment {
+  id int [pk]
+  loan_id int [ref: > loan.id]
+  installment_no int
+  due_month varchar(10)
+  principal_amount decimal(20,2)
+  interest_amount decimal(20,2)
+  admin_fee decimal(20,2)
+  total_amount decimal(20,2)
+  status enum('PENDING','PAID')
+  paid_transaction_id int [ref: > cash_transaction.id, null]
   paid_date date [null]
-}
 
-Table credit_card{
-  id int [pk, increment]
-  user_id int [ref : > users.id, not null]
-  card_name varchar (50) [not null]
-  limit decial (20,2) [not null]
-  billing_cycle_start int [ not null]
-  billing_cycle_end  int [not null]
-}
-
-Table credit_card_transaction {
- id int [pk, increment]
- card_id int [ref: > credit_card.id, not null]
- name varchar (100) [not  null]
- transaction_date date [not null]
- description varchar (100) [null]
-
- payment_scheme varchar (50) [not null] //FULL, INSTALLMENT
- installment_tenor int [null]
- interest_rate decimal (20,2) [null]
- admin_fee decimal (20,2) [null]
-
- created_at date [not null]
-}
-
-Table credit_card_installment{
-  id int [pk, increment]
-  transaction_id int [ref : > credit_card_transaction.id, not null]
-  installment_no int [not null] //1..12
-  due_mont varchar (10) [not null] //01-2026
-  principal_amount decimal (20,2) [null]
-  admin_fee decimal (20,2) [null]
-  status varchar (50) //PAID / PENDING
+  created_at timestamp
+  updated_at timestamp
 }
 
 

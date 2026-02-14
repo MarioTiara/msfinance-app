@@ -3,8 +3,373 @@
   "darkMode": true,
   "gridEnabling": false,
   "detailLevel": "All",
-  "tablePositions": [],
+  "tablePositions": [
+    {
+      "name": "categories",
+      "schemaName": "public",
+      "x": 0,
+      "y": 50
+    },
+    {
+      "name": "expense_budget",
+      "schemaName": "public",
+      "x": -48.71207122496564,
+      "y": 251.34204303015062
+    },
+    {
+      "name": "expense_budget_allocation",
+      "schemaName": "public",
+      "x": 783.142102435456,
+      "y": 1874.2228137512896
+    },
+    {
+      "name": "cash_transaction",
+      "schemaName": "public",
+      "x": 7.844495182992915,
+      "y": 1207.131658961235
+    },
+    {
+      "name": "investments",
+      "schemaName": "public",
+      "x": 751.7641217034844,
+      "y": 911.6569842706723
+    },
+    {
+      "name": "users",
+      "schemaName": "public",
+      "x": 473.6283788457039,
+      "y": 116.18425497846387
+    },
+    {
+      "name": "families",
+      "schemaName": "public",
+      "x": 510.8619184951931,
+      "y": 596
+    },
+    {
+      "name": "accounts",
+      "schemaName": "public",
+      "x": 780.87353515625,
+      "y": 452
+    },
+    {
+      "name": "assets",
+      "schemaName": "public",
+      "x": 841.1295391020102,
+      "y": -69.1002877287732
+    },
+    {
+      "name": "financial_goals",
+      "schemaName": "public",
+      "x": -20.918653821314336,
+      "y": 738.5788940258433
+    },
+    {
+      "name": "instrument",
+      "schemaName": "public",
+      "x": 10.459326910657154,
+      "y": 2182.2156262109256
+    },
+    {
+      "name": "loan",
+      "schemaName": "public",
+      "x": -20.918653821314308,
+      "y": 1591.3877893433407
+    },
+    {
+      "name": "loan_insatllment",
+      "schemaName": "public",
+      "x": 791.10147182793,
+      "y": 1382.2012511301973
+    }
+  ],
   "tableGroupCollapseStates": [],
   "stickyNoteLayouts": [],
-  "referencePaths": []
+  "referencePaths": [
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "categories",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "parent_id"
+      ],
+      "secondTableName": "categories",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "families",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "family_id"
+      ],
+      "secondTableName": "expense_budget",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "categories",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "category_id"
+      ],
+      "secondTableName": "expense_budget",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "expense_budget",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "budget_id"
+      ],
+      "secondTableName": "expense_budget_allocation",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "categories",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "category_id"
+      ],
+      "secondTableName": "expense_budget_allocation",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "users",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "user_id"
+      ],
+      "secondTableName": "cash_transaction",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "expense_budget",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "budget_id"
+      ],
+      "secondTableName": "cash_transaction",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "users",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "user_id"
+      ],
+      "secondTableName": "investments",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "financial_goals",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "goals_id"
+      ],
+      "secondTableName": "investments",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "categories",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "category_id"
+      ],
+      "secondTableName": "investments",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "code"
+      ],
+      "firstTableName": "instrument",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "instrument_code"
+      ],
+      "secondTableName": "investments",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "families",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "family_id"
+      ],
+      "secondTableName": "users",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "users",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "user_id"
+      ],
+      "secondTableName": "accounts",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "users",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "user_holder_id"
+      ],
+      "secondTableName": "assets",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "families",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "family_id"
+      ],
+      "secondTableName": "financial_goals",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "accounts",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "account_id"
+      ],
+      "secondTableName": "loan",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "users",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "user_holder_id"
+      ],
+      "secondTableName": "loan",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "loan",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "loan_id"
+      ],
+      "secondTableName": "loan_insatllment",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "id"
+      ],
+      "firstTableName": "cash_transaction",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "paid_transaction_id"
+      ],
+      "secondTableName": "loan_insatllment",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    }
+  ]
 }
