@@ -238,13 +238,13 @@
     },
     {
       "firstFieldNames": [
-        "code"
+        "id"
       ],
       "firstTableName": "instrument",
       "firstSchemaName": "public",
       "firstRelation": "1",
       "secondFieldNames": [
-        "instrument_code"
+        "instrument_id"
       ],
       "secondTableName": "investments",
       "secondSchemaName": "public",
