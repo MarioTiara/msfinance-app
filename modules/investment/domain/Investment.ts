@@ -4,7 +4,6 @@ import { Money } from "@/modules/shared/domain/value-objects/Money"
 import { Entity } from "@/modules/shared/domain/Entity"
 
 export interface InvestmentProps {
-    id?: number
     userId: UserId
     categoryId: number
     name: string
@@ -17,22 +16,17 @@ export interface InvestmentProps {
     tax?: Money
     transactionDate: Date
     description?: string
-    createdAt?: Date
-    updatedAt?: Date
+
 }
 
 
 export class Investment extends Entity<number> {
     private props: InvestmentProps
 
-    constructor(props: InvestmentProps) {
-        super(props.id)
+    constructor(props: InvestmentProps, id:number) {
+        super(id)
         this.validate(props)
-        this.props = {
-            ...props,
-            createdAt: props.createdAt ?? new Date(),
-            updatedAt: props.updatedAt ?? new Date(),
-        }
+        this.props =  props;
     }
 
     // ===== Getters =====
@@ -84,13 +78,6 @@ export class Investment extends Entity<number> {
         return this.props.description
     }
 
-    get createdAt(): Date {
-        return this.props.createdAt!
-    }
-
-    get updatedAt(): Date {
-        return this.props.updatedAt!
-    }
 
     // ===== Business Methods =====
     /** Total cash out including fee and tax */
@@ -119,10 +106,6 @@ export class Investment extends Entity<number> {
         this.touch()
     }
 
-    /** Update timestamp helper */
-    private touch() {
-        this.props.updatedAt = new Date()
-    }
 
     private validate(props: InvestmentProps) {
         if (!props.userId) throw new Error('UserId is required')
