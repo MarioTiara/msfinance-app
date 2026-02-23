@@ -2,11 +2,11 @@ import { Currency } from "@/modules/shared/domain/value-objects/Currency"
 import { AccountType } from "./AccountType"
 import { Entity } from "@/modules/shared/domain/Entity"
 import { Money } from "@/modules/shared/domain/value-objects/Money"
+import { randomUUID } from 'crypto';
+import { AggregateRoot } from "@/modules/shared/domain/aggregate-root";
 
 export interface AccountProps {
-    id?: number
     userId: number
-    accountId: string
     name: string
     type?: AccountType
     currency?: Currency
@@ -16,12 +16,11 @@ export interface AccountProps {
     updatedAt?: Date
 }
 
-export class Account extends Entity<number> {
-    private props: AccountProps
+export class Account extends AggregateRoot<AccountProps, string> {
+
 
     private constructor(props: AccountProps) {
-        super(props.id)
-
+        super(randomUUID(), props)
         this.validate(props)
         this.props =props;
     }
@@ -50,17 +49,9 @@ export class Account extends Entity<number> {
         })
     }
 
-    // Getters
-    get id() {
-        return this.props.id
-    }
 
     get userId() {
         return this.props.userId
-    }
-
-    get accountId() {
-        return this, this.props.accountId
     }
 
     get name() {
@@ -131,9 +122,6 @@ export class Account extends Entity<number> {
         if (!amount.getCurrency().equals(this.currency)) {
             throw new Error('Currency mismatch')
         }
-    }
-    private touch() {
-        this.props.updatedAt = new Date()
     }
 }
 

@@ -1,14 +1,14 @@
 export abstract class Entity<T> {
-    protected readonly _id?: T
+    protected readonly _id: T
     protected _updatedAt?: Date
     private _createdAt?: Date
-    constructor(id?: T) {
+    constructor(id: T) {
         this._id = id
         this._createdAt = new Date()
         this._updatedAt = new Date()
     }
 
-    get id(): T | undefined {
+    get id(): T {
         return this._id
     }
 

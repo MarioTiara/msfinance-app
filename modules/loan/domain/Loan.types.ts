@@ -1,8 +1,6 @@
 import { Money } from "@/modules/shared/domain/value-objects/Money";
 import { LoanType } from "./enums/Loan-type";
 import { PaymentScheme } from "./enums/payment-scheme";
-import { InterestType } from "./enums/interest-type";
-import { InterestRate } from "./value-objects/interest-rate";
 import { LoanStatus } from "./enums/Loan-status";
 
 
@@ -32,12 +30,6 @@ export interface LoanProps {
   principalAmount: Money;
 
   /**
-   * Total amount that must be repaid including interest.
-   * Used to calculate installment value.
-   */
-  totalPayableAmount: Money;
-
-  /**
    * Loan provider category.
    * Example: bank loan or credit card liability.
    */
@@ -50,24 +42,17 @@ export interface LoanProps {
    */
   paymentScheme: PaymentScheme;
 
-  /**
-   * Defines how interest is calculated.
-   * FIXED = constant rate
-   * FLOATING = rate may change over time
-   */
-  interestType: InterestType;
-
-  /**
-   * Interest percentage applied to the loan.
-   * Required for most loans except certain full-payment credit card types.
-   */
-  interestRate?: InterestRate;
 
   /**
    * Number of months for installment repayment.
    * Required if paymentScheme is INSTALLMENT.
    */
-  installmentTenorMonths?: number;
+  installmentTenorMonths: number;
+
+  /**
+ * Total amount that must be paid monthly.
+ */
+  monthlyAmount: Money;
 
   /**
    * Date when the loan becomes active / starts accruing.

@@ -202,12 +202,11 @@ Table loan {
 
   name varchar (100) [not null]
   principal_amount decimal (20, 2) [not null]
-  total_payable_amount decimal (20, 2) [not null]
+  monthly_amount decimal(20,2) [not null] 
+
 
   type enum ('bank','credit_card')
   payment_scheme enum ('FULL','INSTALLMENT')
-  interest_type enum ('FIXED','FLOATING')
-  interest_rate decimal (5,2) // contoh: 10.5 untuk 10
   installment_tenor_months int // contoh: 12 untuk 1 tahun, 24 untuk 2 tahun, dll
 
   start_date date [not null]
@@ -224,11 +223,9 @@ Table loan_insatllment {
 
   installment_no int
   due_month varchar(10)
-  principal_amount decimal(20,2)
-  interest_amount decimal(20,2)
-  admin_fee decimal(20,2)
   total_amount decimal(20,2)
-  status enum('PENDING','PAID')
+  is_paid bool
+  paid_amount decimal (20,2)
   paid_transaction_id int [ref: > cash_transaction.id, null]
   paid_date date [null]
 

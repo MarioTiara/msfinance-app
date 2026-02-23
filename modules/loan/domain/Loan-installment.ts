@@ -1,24 +1,23 @@
 import { Entity } from "@/modules/shared/domain/Entity"
 import { Money } from "@/modules/shared/domain/value-objects/Money"
 import { InstallmentStatus } from "./enums/installment-status"
+import { randomUUID } from "crypto"
 
 export interface LoanInstallmentProps {
-    loanId: number
+    loandId: string
     installmentNo: number
     dueDate: Date
-    principalAmount: Money
-    interestAmount: Money
-    adminFee?: Money
-    paidTransactionId?: number
-    paidDate?: Date
+    totalAmount: Money
     isPaid: boolean
-
+    paid_amount?: Money
+    paidDate?: Date
+    paidTransactionId?: number
 }
 
-export class LoanInstallment extends Entity<number> {
+export class LoanInstallment extends Entity<string> {
     private props: LoanInstallmentProps;
     private constructor(props: LoanInstallmentProps, id?: number) {
-        super(id)
+        super(randomUUID())
         this.props = props;
     }
 
@@ -62,25 +61,27 @@ export class LoanInstallment extends Entity<number> {
         return this.props.installmentNo
     }
 
-    get dueDare(): Date {
+    get dueDate(): Date {
         return this.props.dueDate
     }
 
-    get principalAmount(): Money {
-        return this.props.principalAmount
-    }
-
-    get interestAmount(): Money {
-        return this.props.interestAmount
-    }
-
-    get adminFee(): Money | undefined {
-        return this.props.adminFee
-    }
-
     get totalAmount(): Money {
-        const total = this.props.principalAmount.add(this.props.interestAmount);
-        return this.props.adminFee ? total.add(this.props.adminFee) : total
+        return this.props.totalAmount;
+    }
+
+    get isPaid(): boolean {
+        return this.props.isPaid;
+    }
+
+    get paidDate(): Date | undefined {
+        return this.props.paidDate;
+    }
+
+    get paidAmount(): Money | undefined {
+        return this.props.paid_amount;
+    }
+    get paymentTransactionId(): number | undefined {
+        return this.props.paidTransactionId
     }
 
     get status(): InstallmentStatus {

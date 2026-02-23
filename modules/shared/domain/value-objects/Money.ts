@@ -52,4 +52,9 @@ export class Money {
       this.currency.equals(other.currency)
     )
   }
+  public multiplay(number:number): Money {
+    return Money.create(this.amount * number,
+      this.currency
+    )
+  }
 }

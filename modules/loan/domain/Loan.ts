@@ -3,11 +3,12 @@ import { LoanProps } from "./Loan.types";
 import { LoanStatus } from "./enums/Loan-status";
 import { PaymentScheme } from "./enums/payment-scheme";
 import { Money } from "@/modules/shared/domain/value-objects/Money";
-import { InterestRate } from "./value-objects/interest-rate";
+import { randomUUID } from 'crypto';
+import { LoanInstallment } from "./Loan-installment";
 
-export class Loan extends AggregateRoot<LoanProps, number> {
+export class Loan extends AggregateRoot<LoanProps, string> {
     private constructor(id: number, props: LoanProps) {
-        super(id, props)
+        super(randomUUID(), props)
     }
 
     // Factory for creating new Loan
@@ -58,12 +59,50 @@ export class Loan extends AggregateRoot<LoanProps, number> {
         return this.props.status === LoanStatus.ACTIVE;
     }
 
+
+
+    generateInstallments(): LoanInstallment[] {
+        const installments: LoanInstallment[] = []
+        if (this.paymentScheme == PaymentScheme.FULL) {
+            installments.push(LoanInstallment.create({
+                loandId: this._id,
+                installmentNo: 1,
+                dueDate: this.props.endDate,
+                totalAmount: this.props.monthlyAmount,
+                isPaid: false,
+            }))
+        }
+
+        else if (this.paymentScheme == PaymentScheme.INSTALLMENT) {
+            for (let i = 1; i <= this.props.installmentTenorMonths; i++) {
+                installments.push(LoanInstallment.create({
+                    loandId: this._id,
+                    installmentNo: i,
+                    dueDate: this.calculateDueDate(i),
+                    totalAmount: this.props.monthlyAmount,
+                    isPaid: false,
+                }))
+            }
+        }
+
+        return installments;
+    }
+
+    private calculateDueDate(installmentNo: number): Date {
+        const totalMonths = this.props.installmentTenorMonths
+        const monthSpan = Math.floor((this.props.endDate.getTime() - this.props.startDate.getTime()) / (1000 * 60 * 60 * 24 * 30))
+
+        const due = new Date(this.props.startDate)
+        due.setMonth(due.getMonth() + installmentNo - 1)
+        due.setDate(this.props.endDate.getDate()) // sesuaikan dengan tanggal akhir
+        return due
+    }
     // ====== Getters ==========
     get name(): string {
         return this.props.name;
     }
 
-    get accountId():number{
+    get accountId(): number {
         return this.props.accountId;
     }
     get status(): LoanStatus {
@@ -74,23 +113,20 @@ export class Loan extends AggregateRoot<LoanProps, number> {
         return this.props.principalAmount;
     }
 
-    get userHolderId():number{
+    get userHolderId(): number {
         return this.props.userHolderId;
     }
 
-    get payable(): Money{
-        return this.props.totalPayableAmount;
+    get payable(): Money {
+        return this.props.monthlyAmount.multiplay(this.props.installmentTenorMonths);
     }
 
-    get paymentScheme(): PaymentScheme{
+    get paymentScheme(): PaymentScheme {
         return this.props.paymentScheme;
     }
 
-    get interest(): InterestRate| undefined{
-        return this.props.interestRate;
-    }
 
-    get tenorMonths():number | undefined{
+    get tenorMonths(): number | undefined {
         return this.props.installmentTenorMonths
     }
 
