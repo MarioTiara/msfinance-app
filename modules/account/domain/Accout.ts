@@ -2,11 +2,11 @@ import { Currency } from "@/modules/shared/domain/value-objects/Currency"
 import { AccountType } from "./AccountType"
 import { Entity } from "@/modules/shared/domain/Entity"
 import { Money } from "@/modules/shared/domain/value-objects/Money"
+import { randomUUID } from 'crypto';
+import { AggregateRoot } from "@/modules/shared/domain/aggregate-root";
 
 export interface AccountProps {
-    id?: number
     userId: number
-    accountId: string
     name: string
     type?: AccountType
     currency?: Currency
@@ -16,20 +16,15 @@ export interface AccountProps {
     updatedAt?: Date
 }
 
-export class Account extends Entity<number> {
-    private props: AccountProps
+export class Account extends AggregateRoot<AccountProps, string> {
 
-    constructor(props: AccountProps) {
-        super(props.id)
+
+    private constructor(props: AccountProps) {
+        super(randomUUID(), props)
         this.validate(props)
-        this.props = {
-            ...props,
-            type: props.type ?? AccountType.BANK,
-            currency: props.currency ?? Currency.IDR,
-            createdAt: props.createdAt ?? new Date(),
-            updatedAt: props.updatedAt ?? new Date(),
-        }
+        this.props =props;
     }
+
 
     private validate(props: AccountProps) {
         if (!props.userId) {
@@ -45,17 +40,18 @@ export class Account extends Entity<number> {
         }
     }
 
-    // Getters
-    get id() {
-        return this.props.id
+    static create(props: Omit<AccountProps,"id"| "createdAt" | "updatedAt">): Account{
+        const now= new Date()
+        return new Account({
+            ...props,
+            createdAt:now,
+            updatedAt:now
+        })
     }
+
 
     get userId() {
         return this.props.userId
-    }
-
-    get accountId() {
-        return this, this.props.accountId
     }
 
     get name() {
@@ -126,9 +122,6 @@ export class Account extends Entity<number> {
         if (!amount.getCurrency().equals(this.currency)) {
             throw new Error('Currency mismatch')
         }
-    }
-    private touch() {
-        this.props.updatedAt = new Date()
     }
 }
 

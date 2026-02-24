@@ -1,47 +1,38 @@
-import { UserId } from "@/modules/familiy/domain/value-objects/UserId"
+
 import { InvestmentTransactionType } from "./InvestmentTransactionType"
 import { Money } from "@/modules/shared/domain/value-objects/Money"
-import { Entity } from "@/modules/shared/domain/Entity"
+import { AggregateRoot } from "@/modules/shared/domain/aggregate-root"
+import { randomUUID } from "crypto"
+
 
 export interface InvestmentProps {
-    id?: number
-    userId: UserId
-    categoryId: number
+    userId: string
     name: string
     transactionType: InvestmentTransactionType
+    goal_id?: string
     quantity?: number
-    unit?: string                  // optional, misal 'lot', 'gram', 'unit'
+    unit?: string
     pricePerUnit?: number
     totalAmount: Money
     fee?: Money
     tax?: Money
     transactionDate: Date
     description?: string
-    createdAt?: Date
-    updatedAt?: Date
 }
 
-
-export class Investment extends Entity<number> {
-    private props: InvestmentProps
-
-    constructor(props: InvestmentProps) {
-        super(props.id)
+export class Investment extends AggregateRoot<InvestmentProps, string> {
+    private constructor(props: InvestmentProps) {
+        super(randomUUID(), props)
         this.validate(props)
-        this.props = {
-            ...props,
-            createdAt: props.createdAt ?? new Date(),
-            updatedAt: props.updatedAt ?? new Date(),
-        }
+    }
+
+    static create(props: InvestmentProps) {
+        return new Investment(props)
     }
 
     // ===== Getters =====
-    get userId(): UserId {
+    get userId(): string {
         return this.props.userId
-    }
-
-    get categoryId(): number {
-        return this.props.categoryId
     }
 
     get name(): string {
@@ -84,13 +75,6 @@ export class Investment extends Entity<number> {
         return this.props.description
     }
 
-    get createdAt(): Date {
-        return this.props.createdAt!
-    }
-
-    get updatedAt(): Date {
-        return this.props.updatedAt!
-    }
 
     // ===== Business Methods =====
     /** Total cash out including fee and tax */
@@ -119,14 +103,9 @@ export class Investment extends Entity<number> {
         this.touch()
     }
 
-    /** Update timestamp helper */
-    private touch() {
-        this.props.updatedAt = new Date()
-    }
 
     private validate(props: InvestmentProps) {
         if (!props.userId) throw new Error('UserId is required')
-        if (!props.categoryId) throw new Error('CategoryId is required')
         if (!props.name) throw new Error('Investment name is required')
         if (!props.transactionType) throw new Error('Transaction type is required')
         if (!props.totalAmount) throw new Error('Total amount is required')
