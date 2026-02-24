@@ -157,20 +157,40 @@ Table assets {
 // ============================
 
 Table financial_goals {
-  id int [pk, increment]
+  id uuid [pk]
   family_id int [not null, ref: > families.id]
 
   name varchar(100) [not null]
   target_amount decimal(14,2) [not null]
+  target_date date [not null]
   status enum('not_started', 'in_progress', 'accomplished') [default: 'not_started']
+  
   description text
-  amount_per_period decimal(14,2) [not null] // contoh: 300000
-  frequency enum('monthly', 'weekly') [not null]
+  
+  created_at timestamp [default: `current_timestamp`]
+  updated_at timestamp [default: `current_timestamp`]
+}
+
+Table financial_goal_strategies{
+  id uuid [pk]
+  goal_id uiid [ref:> financial_goals.id, not null]
+
   start_date date [not null]
-  end_date date
+  end_date date [null]
+
+  frequency enum ('monthly', 'weekly') [not null]
 
   created_at timestamp [default: `current_timestamp`]
   updated_at timestamp [default: `current_timestamp`]
+
+}
+
+Table financial_goal_allocations{
+ id uuid [pk]
+ strategy_id uiid [not null, ref:> financial_goal_strategies.id]
+
+ asset_type enum('stock', 'gold', 'bond') [not null]
+ allocation_amount decimal(14,2) [not null] 
 }
 
 
