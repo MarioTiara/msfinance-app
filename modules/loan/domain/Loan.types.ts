@@ -2,6 +2,7 @@ import { Money } from "@/modules/shared/domain/value-objects/Money";
 import { LoanType } from "./enums/Loan-type";
 import { PaymentScheme } from "./enums/payment-scheme";
 import { LoanStatus } from "./enums/Loan-status";
+import { LoanInstallment } from "./Loan-installment";
 
 
 export interface LoanProps {
@@ -71,4 +72,10 @@ export interface LoanProps {
    * PAID_OFF = fully repaid
    */
   status: LoanStatus;
+
+  /**
+   * monthly installment list
+   */
+
+  installments: LoanInstallment[]
 }

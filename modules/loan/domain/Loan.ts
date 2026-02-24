@@ -7,7 +7,7 @@ import { randomUUID } from 'crypto';
 import { LoanInstallment } from "./Loan-installment";
 
 export class Loan extends AggregateRoot<LoanProps, string> {
-    private constructor( props: LoanProps) {
+    private constructor(props: LoanProps) {
         super(randomUUID(), props)
     }
 
@@ -58,10 +58,9 @@ export class Loan extends AggregateRoot<LoanProps, string> {
         return this.props.status === LoanStatus.ACTIVE;
     }
 
-    generateInstallments(): LoanInstallment[] {
-        const installments: LoanInstallment[] = []
+    generateInstallments() {
         if (this.paymentScheme == PaymentScheme.FULL) {
-            installments.push(LoanInstallment.create({
+            this.props.installments.push(LoanInstallment.create({
                 loandId: this._id,
                 installmentNo: 1,
                 dueDate: this.props.endDate,
@@ -72,7 +71,7 @@ export class Loan extends AggregateRoot<LoanProps, string> {
 
         else if (this.paymentScheme == PaymentScheme.INSTALLMENT) {
             for (let i = 1; i <= this.props.installmentTenorMonths; i++) {
-                installments.push(LoanInstallment.create({
+                this.props.installments.push(LoanInstallment.create({
                     loandId: this._id,
                     installmentNo: i,
                     dueDate: this.calculateDueDate(i),
@@ -82,7 +81,7 @@ export class Loan extends AggregateRoot<LoanProps, string> {
             }
         }
 
-        return installments;
+
     }
 
     private calculateDueDate(installmentNo: number): Date {
@@ -125,6 +124,10 @@ export class Loan extends AggregateRoot<LoanProps, string> {
 
     get tenorMonths(): number | undefined {
         return this.props.installmentTenorMonths
+    }
+
+    get installments(): LoanInstallment[] {
+        return this.props.installments
     }
 
 
