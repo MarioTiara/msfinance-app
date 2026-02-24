@@ -1,5 +1,7 @@
 import { Entity } from "@/modules/shared/domain/Entity"
 import { CategoryType } from "./CategoryType";
+import { AggregateRoot } from "@/modules/shared/domain/aggregate-root";
+import { randomUUID } from "crypto";
 
 interface CategoryProps {
     name: string;
@@ -7,12 +9,10 @@ interface CategoryProps {
     parentId: number | null;
 }
 
-export class Category extends Entity<number> {
-    private props: CategoryProps;
-    private constructor(props: CategoryProps, id?: number) {
-        super(id)
+export class Category extends AggregateRoot<CategoryProps, string>{
+    private constructor(props: CategoryProps) {
+        super(randomUUID(), props)
         this.validate(props);
-        this.props = props;
     }
 
 

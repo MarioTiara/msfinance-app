@@ -1,6 +1,8 @@
 import { Entity } from "@/modules/shared/domain/Entity";
 import { AssetType } from "./AssetType";
 import { ValuationPolicy } from "./value-objects/ValuationPolicy";
+import { AggregateRoot } from "@/modules/shared/domain/aggregate-root";
+import { randomUUID } from "crypto";
 
 export interface AssetProps {
     familyId: number;
@@ -18,13 +20,11 @@ export interface AssetProps {
     createdByUserId: number;
 }
 
-export class Asset extends Entity<number> {
-    private props: AssetProps;
+export class Asset extends AggregateRoot<AssetProps, string> {
 
-    private constructor(props: AssetProps, id?: number) {
-        super(id);
+    private constructor(props: AssetProps) {
+        super(randomUUID(), props)
         this.validate(props);
-        this.props = props;
     }
 
     /* =====================

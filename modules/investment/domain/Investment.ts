@@ -1,15 +1,16 @@
-import { UserId } from "@/modules/familiy/domain/value-objects/UserId"
+
 import { InvestmentTransactionType } from "./InvestmentTransactionType"
 import { Money } from "@/modules/shared/domain/value-objects/Money"
-import { Entity } from "@/modules/shared/domain/Entity"
+import { AggregateRoot } from "@/modules/shared/domain/aggregate-root"
+import { randomUUID } from "crypto"
 
 export interface InvestmentProps {
-    userId: UserId
+    userId: string
     categoryId: number
     name: string
     transactionType: InvestmentTransactionType
     quantity?: number
-    unit?: string                  // optional, misal 'lot', 'gram', 'unit'
+    unit?: string                 
     pricePerUnit?: number
     totalAmount: Money
     fee?: Money
@@ -20,17 +21,18 @@ export interface InvestmentProps {
 }
 
 
-export class Investment extends Entity<number> {
-    private props: InvestmentProps
-
-    constructor(props: InvestmentProps, id:number) {
-        super(id)
+export class Investment extends AggregateRoot<InvestmentProps, string> {
+    private constructor(props: InvestmentProps) {
+        super(randomUUID(), props)
         this.validate(props)
-        this.props =  props;
+    }
+
+    static create(props: InvestmentProps) {
+        return new Investment(props)
     }
 
     // ===== Getters =====
-    get userId(): UserId {
+    get userId(): string {
         return this.props.userId
     }
 

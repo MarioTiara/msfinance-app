@@ -7,13 +7,12 @@ import { randomUUID } from 'crypto';
 import { LoanInstallment } from "./Loan-installment";
 
 export class Loan extends AggregateRoot<LoanProps, string> {
-    private constructor(id: number, props: LoanProps) {
+    private constructor( props: LoanProps) {
         super(randomUUID(), props)
     }
 
     // Factory for creating new Loan
     static create(
-        id: number,
         props: Omit<LoanProps, 'status' | 'createdAt' | 'updatedAt'>,
     ): Loan {
         if (props.startDate >= props.endDate) {
@@ -29,7 +28,7 @@ export class Loan extends AggregateRoot<LoanProps, string> {
 
         const now = new Date();
 
-        return new Loan(id, {
+        return new Loan({
             ...props,
             status: LoanStatus.ACTIVE,
         });
@@ -58,8 +57,6 @@ export class Loan extends AggregateRoot<LoanProps, string> {
     isActive(): boolean {
         return this.props.status === LoanStatus.ACTIVE;
     }
-
-
 
     generateInstallments(): LoanInstallment[] {
         const installments: LoanInstallment[] = []

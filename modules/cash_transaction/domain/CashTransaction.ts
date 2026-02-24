@@ -1,9 +1,11 @@
 import { Entity } from "@/modules/shared/domain/Entity";
 import { Money } from "@/modules/shared/domain/value-objects/Money";
-import { UserId } from "@/modules/familiy/domain/value-objects/UserId";
+
+import { AggregateRoot } from "@/modules/shared/domain/aggregate-root";
+import { randomUUID } from "crypto";
 
 export interface CashTransactionProps {
-    userId: UserId
+    userId: string
     transaction_type: TransactionType
     allocationId?: number
 
@@ -12,12 +14,10 @@ export interface CashTransactionProps {
     description?: string
 }
 
-export class CashTransaction extends Entity<number> {
-    private props: CashTransactionProps;
-    private constructor(props: CashTransactionProps, id?: number) {
-        super(id)
+export class CashTransaction extends AggregateRoot<CashTransactionProps, string> {
+    private constructor(props: CashTransactionProps) {
+        super(randomUUID(), props)
         this.validate(props)
-        this.props = props;
     }
 
     // ===== Factory Method =====
@@ -26,7 +26,7 @@ export class CashTransaction extends Entity<number> {
     }
 
     // ===== Getters =====
-    get userId(): UserId {
+    get userId(): string {
         return this.props.userId
     }
 
@@ -57,10 +57,6 @@ export class CashTransaction extends Entity<number> {
         this.touch()
     }
 
-    public changeTransactionDate(date: Date) {
-        this.props.transactionDate = date;
-        this.touch()
-    }
 
     // ===== Validation =====
     private validate(props: CashTransactionProps) {

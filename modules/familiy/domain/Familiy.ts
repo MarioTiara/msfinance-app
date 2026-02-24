@@ -1,18 +1,24 @@
 import { Entity } from "@/modules/shared/domain/Entity";
-import { FamilyId } from "./value-objects/FamilyId";
 import { FamilyName } from "./value-objects/FamiliyName";
+import { AggregateRoot } from "@/modules/shared/domain/aggregate-root";
+import { randomUUID } from "crypto";
 
-export class Familiy extends Entity<FamilyId>{
-    public name: FamilyName;
-    public readonly createdAt: Date;
 
-    constructor(id: FamilyId, name: FamilyName) {
-        super(id);
-        this.name = name;
-        this.createdAt = new Date();
+export interface FamiliyProps {
+    Name: FamilyName
+}
+
+export class Familiy extends AggregateRoot<FamiliyProps, string> {
+
+    private constructor(props: FamiliyProps) {
+        super(randomUUID(), props);
+    }
+
+    static create(props: FamiliyProps) {
+        return new Familiy(props)
     }
 
     rename(newName: FamilyName) {
-        this.name = newName;
+        this.props.Name = newName;
     }
 }

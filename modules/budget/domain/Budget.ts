@@ -1,7 +1,8 @@
 import { Money } from "@/modules/shared/domain/value-objects/Money"
 import { BudgetMonth } from "./value-object/BudgetMonth"
-import { Entity } from "@/modules/shared/domain/Entity"
 import { Category } from "@/modules/category/domain/Category"
+import { AggregateRoot } from "@/modules/shared/domain/aggregate-root"
+import { randomUUID } from "crypto"
 
 export interface BudgetProps {
     category: Category
@@ -11,13 +12,11 @@ export interface BudgetProps {
     updatedAt?: Date
 }
 
-export class Budget extends Entity<number> {
-    private props: BudgetProps;
+export class Budget extends AggregateRoot<BudgetProps, string>{
 
-    private constructor(props: BudgetProps, id?: number) {
-        super(id)
+    private constructor(props: BudgetProps) {
+        super(randomUUID(), props)
         this.validate(props);
-        this.props = props;
     }
 
     static create(props: BudgetProps): Budget {
