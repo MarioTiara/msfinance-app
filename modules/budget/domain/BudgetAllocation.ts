@@ -1,20 +1,23 @@
+import { Entity } from "@/modules/shared/domain/Entity"
 import { Money } from "@/modules/shared/domain/value-objects/Money"
+import { randomUUID } from "crypto"
 
 export interface BudgetAllocationProps {
-    budgetId: number
-    categoryId: number
+    budgetId: string
+    categoryId: string
     allocatedAmount: Money
 }
 
-export class BudgetAllocation{
+export class BudgetAllocation extends Entity<string> {
     private props: BudgetAllocationProps;
 
-    private constructor(props: BudgetAllocationProps, id?: number) {
-        this.validate(props);
+    private constructor(props: BudgetAllocationProps) {
+        super(randomUUID())
+        this.validate(props)
         this.props = props;
     }
 
-    static create (props: BudgetAllocationProps): BudgetAllocation {
+    static create(props: BudgetAllocationProps): BudgetAllocation {
         return new BudgetAllocation(props)
     }
 
@@ -29,15 +32,20 @@ export class BudgetAllocation{
     }
 
     // ===== Getters =====
-    get budgetId(): number {
+    get budgetId(): string {
         return this.props.budgetId
     }
-    
-    get categoryId(): number {
+
+    get categoryId(): string {
         return this.props.categoryId
     }
     get allocatedAmount(): Money {
         return this.props.allocatedAmount
+    }
+
+    //Behavior
+    changeAmount(newAmount:Money){
+        this.props.allocatedAmount=newAmount
     }
 
 

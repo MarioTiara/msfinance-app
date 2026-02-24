@@ -17,6 +17,7 @@ Table categories {
 // ============================
 Table budget {
   id int [pk, increment] // primary key
+  name varchar(50) [not null]
   family_id int [ref: > families.id, not null] // untuk budget keluarga
   category_id int [ref: > categories.id, not null] // link ke kategori
   budget_month date [not null] // bulan untuk budget, simpan sebagai first day of month
@@ -61,9 +62,7 @@ Table cash_transaction {
 Table investments {
   id int [pk, increment] // primary key
   user_id int [ref: > users.id, not null] // user / anggota keluarga
-  goals_id int [ref: > financial_goals.id, null]
-  category_id int [ref: > categories.id, not null] // tipe investasi
-
+  goal_id int [ref: > financial_goals.id, null]
   name varchar(100) [not null] // nama investasi / simbol
   transaction_type enum('buy','sell','dividend') [not null] // jenis transaksi
   instrument_id varchar [ref:> instrument.id, not null]

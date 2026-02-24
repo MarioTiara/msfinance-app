@@ -1,13 +1,11 @@
-import { Entity } from "@/modules/shared/domain/Entity";
 import { Money } from "@/modules/shared/domain/value-objects/Money";
-
 import { AggregateRoot } from "@/modules/shared/domain/aggregate-root";
 import { randomUUID } from "crypto";
 
 export interface CashTransactionProps {
     userId: string
     transaction_type: TransactionType
-    allocationId?: number
+    allocationId?: string
 
     transactionDate: Date
     amount: Money
@@ -30,7 +28,7 @@ export class CashTransaction extends AggregateRoot<CashTransactionProps, string>
         return this.props.userId
     }
 
-    get allocationId(): number | undefined {
+    get allocationId(): string  | undefined {
         return this.props.allocationId
     }
 
@@ -56,7 +54,6 @@ export class CashTransaction extends AggregateRoot<CashTransactionProps, string>
         this.props.description = desc;
         this.touch()
     }
-
 
     // ===== Validation =====
     private validate(props: CashTransactionProps) {

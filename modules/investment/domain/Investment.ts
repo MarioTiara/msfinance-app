@@ -4,22 +4,21 @@ import { Money } from "@/modules/shared/domain/value-objects/Money"
 import { AggregateRoot } from "@/modules/shared/domain/aggregate-root"
 import { randomUUID } from "crypto"
 
+
 export interface InvestmentProps {
     userId: string
-    categoryId: number
     name: string
     transactionType: InvestmentTransactionType
+    goal_id?: string
     quantity?: number
-    unit?: string                 
+    unit?: string
     pricePerUnit?: number
     totalAmount: Money
     fee?: Money
     tax?: Money
     transactionDate: Date
     description?: string
-
 }
-
 
 export class Investment extends AggregateRoot<InvestmentProps, string> {
     private constructor(props: InvestmentProps) {
@@ -34,10 +33,6 @@ export class Investment extends AggregateRoot<InvestmentProps, string> {
     // ===== Getters =====
     get userId(): string {
         return this.props.userId
-    }
-
-    get categoryId(): number {
-        return this.props.categoryId
     }
 
     get name(): string {
@@ -111,7 +106,6 @@ export class Investment extends AggregateRoot<InvestmentProps, string> {
 
     private validate(props: InvestmentProps) {
         if (!props.userId) throw new Error('UserId is required')
-        if (!props.categoryId) throw new Error('CategoryId is required')
         if (!props.name) throw new Error('Investment name is required')
         if (!props.transactionType) throw new Error('Transaction type is required')
         if (!props.totalAmount) throw new Error('Total amount is required')

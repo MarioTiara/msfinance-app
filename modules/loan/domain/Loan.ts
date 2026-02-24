@@ -130,5 +130,4 @@ export class Loan extends AggregateRoot<LoanProps, string> {
         return this.props.installments
     }
 
-
 }
